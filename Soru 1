@@ -1,0 +1,76 @@
+Sıralama Algoritmaları ve Süre Ölçümü (Soru 1)
+Açıklama:
+Bu programda 0 ile 1000 arasında rastgele 500 sayı üretilip bir diziye aktarılmaktadır. Algoritmaların sürelerini adil bir şekilde karşılaştırmak için, orijinal dizi her iki sıralama fonksiyonuna da aynı haliyle (kopyalanarak) gönderilmiştir. Süre ölçümü için <time.h> kütüphanesindeki clock() fonksiyonu kullanılmıştır. (Not: 500 eleman günümüz bilgisayarları için çok küçük olduğundan süre 0.000 saniye çıkabilir, bu normaldir).
+
+C Kodu:
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define BOYUT 500
+
+// Insertion Sort (Araya Sokma / Birleştirmeli Sıralama)
+void insertionSort(int dizi[], int n) {
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = dizi[i];
+        j = i - 1;
+        while (j >= 0 && dizi[j] > key) {
+            dizi[j + 1] = dizi[j];
+            j = j - 1;
+        }
+        dizi[j + 1] = key;
+    }
+}
+
+// Selection Sort (Seçmeli Sıralama)
+void selectionSort(int dizi[], int n) {
+    int i, j, min_idx, temp;
+    for (i = 0; i < n - 1; i++) {
+        min_idx = i;
+        for (j = i + 1; j < n; j++)
+            if (dizi[j] < dizi[min_idx])
+                min_idx = j;
+        
+        temp = dizi[min_idx];
+        dizi[min_idx] = dizi[i];
+        dizi[i] = temp;
+    }
+}
+
+int main() {
+    int orijinalDizi[BOYUT];
+    int kopyaDizi1[BOYUT];
+    int kopyaDizi2[BOYUT];
+    clock_t baslangic, bitis;
+    double gecenSure1, gecenSure2;
+
+    // Rastgele sayı üreticiyi başlat
+    srand(time(NULL));
+
+    // Diziyi 0-1000 arası rastgele sayılarla doldur ve kopyala
+    for (int i = 0; i < BOYUT; i++) {
+        orijinalDizi[i] = rand() % 1001;
+        kopyaDizi1[i] = orijinalDizi[i];
+        kopyaDizi2[i] = orijinalDizi[i];
+    }
+
+    // Insertion Sort süresini ölç
+    baslangic = clock();
+    insertionSort(kopyaDizi1, BOYUT);
+    bitis = clock();
+    gecenSure1 = ((double)(bitis - baslangic)) / CLOCKS_PER_SEC;
+
+    // Selection Sort süresini ölç
+    baslangic = clock();
+    selectionSort(kopyaDizi2, BOYUT);
+    bitis = clock();
+    gecenSure2 = ((double)(bitis - baslangic)) / CLOCKS_PER_SEC;
+
+    printf("=== Siralama Algoritmalari Performans Testi ===\n");
+    printf("Eleman Sayisi: %d\n", BOYUT);
+    printf("Insertion Sort Calisma Suresi: %f saniye\n", gecenSure1);
+    printf("Selection Sort Calisma Suresi: %f saniye\n", gecenSure2);
+
+    return 0;
+}
