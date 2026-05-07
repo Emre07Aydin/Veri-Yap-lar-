@@ -1,3 +1,5 @@
+Trie (Metin Ağacı) Yapısı ve Algoritması (Soru 3)
+
 Trie (Metin Ağacı) Nedir?
 Trie, genellikle string (metin) anahtarlarını verimli bir şekilde saklamak ve aramak için kullanılan ağaç tabanlı bir veri yapısıdır. Kök düğüm (root) boştur. Her düğüm, alfabedeki harf sayısı kadar (örneğin İngilizce için 26) alt düğüm işaretçisi barındırır. Kelimelerin ortak önekleri (prefix) aynı yolu paylaşır, bu da bellek tasarrufu ve arama hızında büyük avantaj sağlar.
 
