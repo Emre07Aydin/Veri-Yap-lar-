@@ -1,0 +1,72 @@
+Trie (Metin Ağacı) Nedir?
+Trie, genellikle string (metin) anahtarlarını verimli bir şekilde saklamak ve aramak için kullanılan ağaç tabanlı bir veri yapısıdır. Kök düğüm (root) boştur. Her düğüm, alfabedeki harf sayısı kadar (örneğin İngilizce için 26) alt düğüm işaretçisi barındırır. Kelimelerin ortak önekleri (prefix) aynı yolu paylaşır, bu da bellek tasarrufu ve arama hızında büyük avantaj sağlar.
+
+Çalışma Şekli ve Algoritması:
+
+Ekleme (Insert): Kökten başlanır. Eklenecek kelimenin her bir harfi için, o harfe karşılık gelen bir alt düğüm olup olmadığı kontrol edilir. Yoksa yeni bir düğüm oluşturulur. Kelimenin son harfine gelindiğinde, o düğümün kelimeSonuMu (isEndOfWord) bayrağı true (veya 1) yapılır.
+
+Arama (Search): Kökten başlanır ve aranan kelimenin harfleri sırasıyla takip edilir. Eğer yoldaki bir harfin düğümü yoksa kelime ağaçta yoktur. Harfler bittiğinde ulaşılan düğümün kelimeSonuMu bayrağı 1 ise kelime bulunmuştur.
+
+Örnek Trie Oluşturma C Kodu:
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define ALFABE_BOYUTU 26
+
+// Trie Düğümü Yapısı
+struct TrieDugumu {
+    struct TrieDugumu *cocuklar[ALFABE_BOYUTU];
+    bool kelimeSonuMu; // Düğüm bir kelimenin sonuysa true olur
+};
+
+// Yeni bir Trie düğümü oluşturan fonksiyon
+struct TrieDugumu *yeniDugum(void) {
+    struct TrieDugumu *pNode = NULL;
+    pNode = (struct TrieDugumu *)malloc(sizeof(struct TrieDugumu));
+
+    if (pNode) {
+        pNode->kelimeSonuMu = false;
+        for (int i = 0; i < ALFABE_BOYUTU; i++) {
+            pNode->cocuklar[i] = NULL;
+        }
+    }
+    return pNode;
+}
+
+// Trie'ye kelime ekleme algoritması
+void ekle(struct TrieDugumu *kok, const char *kelime) {
+    struct TrieDugumu *gecici = kok;
+    int uzunluk = strlen(kelime);
+
+    for (int seviye = 0; seviye < uzunluk; seviye++) {
+        // Karakterin ASCII değerinden 'a' çıkararak 0-25 arası indeks bulma
+        int indeks = kelime[seviye] - 'a';
+
+        // Eğer o harf yoksa yeni düğüm oluştur
+        if (!gecici->cocuklar[indeks]) {
+            gecici->cocuklar[indeks] = yeniDugum();
+        }
+
+        // Bir alt seviyeye geç
+        gecici = gecici->cocuklar[indeks];
+    }
+
+    // Kelimenin sonuna gelindiğini işaretle
+    gecici->kelimeSonuMu = true;
+}
+
+int main() {
+    // Örnek kullanım
+    struct TrieDugumu *kok = yeniDugum();
+
+    // Trie ağacına kelimeler ekleyelim
+    ekle(kok, "veri");
+    ekle(kok, "yapi");
+    ekle(kok, "algoritma");
+
+    printf("Trie (Metin Agaci) basariyla olusturuldu ve ornek kelimeler eklendi.\n");
+
+    return 0;
+}
