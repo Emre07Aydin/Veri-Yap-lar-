@@ -1,0 +1,66 @@
+Özel Sıralama Algoritması - Bir Büyük, Bir Küçük (Soru 2)
+Algoritmanın Mantığı:
+Bu özel sıralama işlemini gerçekleştirmek için öncelikle diziyi standart bir algoritma (örneğin Bubble Sort) ile küçükten büyüğe sıralarız. Ardından geçici bir dizi oluşturup, sıralanmış dizinin en sonundan (en büyük) ve en başından (en küçük) sırayla eleman alarak yeni diziyi inşa ederiz. Son olarak geçici diziyi orijinal diziye kopyalarız.
+
+C Kodu:
+#include <stdio.h>
+
+// Özel sıralama fonksiyonu
+void ozelSiralama(int dizi[], int n) {
+    int i, j, temp;
+    
+    // 1. Adım: Diziyi standart şekilde küçükten büyüğe sırala (Bubble Sort kullanıldı)
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (dizi[j] > dizi[j + 1]) {
+                temp = dizi[j];
+                dizi[j] = dizi[j + 1];
+                dizi[j + 1] = temp;
+            }
+        }
+    }
+
+    // 2. Adım: Bir büyük, bir küçük olacak şekilde yeni bir diziye aktar
+    int geciciDizi[n];
+    int sol = 0;          // En küçük elemanın indeksi (baştan)
+    int sag = n - 1;      // En büyük elemanın indeksi (sondan)
+
+    for (i = 0; i < n; i++) {
+        if (i % 2 == 0) {
+            geciciDizi[i] = dizi[sag]; // Çift indekslere en büyükleri yerleştir
+            sag--;
+        } else {
+            geciciDizi[i] = dizi[sol]; // Tek indekslere en küçükleri yerleştir
+            sol++;
+        }
+    }
+
+    // 3. Adım: Geçici diziyi orijinal diziye geri kopyala
+    for (i = 0; i < n; i++) {
+        dizi[i] = geciciDizi[i];
+    }
+}
+
+// Diziyi ekrana yazdırmak için yardımcı fonksiyon
+void diziYazdir(int dizi[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", dizi[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    // Soruda verilen örnek dizi
+    int dizi[] = {60, 80, 3, 9, 57, 11};
+    int n = sizeof(dizi) / sizeof(dizi[0]);
+
+    printf("Orijinal Dizi: ");
+    diziYazdir(dizi, n);
+
+    ozelSiralama(dizi, n);
+
+    printf("Ozel Siralanmis Dizi (Bir Buyuk Bir Kucuk): ");
+    diziYazdir(dizi, n);
+
+    return 0;
+}
